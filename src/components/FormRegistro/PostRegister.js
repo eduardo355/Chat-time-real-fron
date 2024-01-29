@@ -2,7 +2,7 @@ import io from 'socket.io-client'
 
 export const PostRegiser = (name, apellido, user) => {
     return new Promise((resolve, reject) => {
-        const socket = io('https://chat-time-real-back-patient-paper-4336.fly.dev"', {
+        const socket = io('https://chat-time-real-back-patient-paper-4336.fly.dev', {
             withCredentials: true,
             transports: ['websocket', 'polling'],
             auth: {
