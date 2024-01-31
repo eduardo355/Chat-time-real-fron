@@ -1,7 +1,7 @@
 {
     "routes": [
-        { "src": "/Chat/.*", "dest": "/index.html" },
-        { "src": "/Sesion/.*", "dest": "/index.html" },
-        { "src": "/.*", "dest": "/index.html" }
+      { "handle": "filesystem" },
+      { "src": "/.*", "dest": "/index.html" }
     ]
-}
+  }
+  
