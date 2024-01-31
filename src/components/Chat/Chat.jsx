@@ -6,7 +6,7 @@ const Chat = () => {
     const [message, setMessage] = useState('')
     const [rowsMessage, setRowsMessage] = useState([])
     const [loading, setLoading] = useState(true)
-    const [userName, setUserName] = useState('')
+    const [userName, setUserName] = useState('anonymus')
     const [online, setOnline] = useState(0)
     const chatContainerRef = useRef(null)
     const location = useLocation()
@@ -16,19 +16,19 @@ const Chat = () => {
     } else {
         document.documentElement.classList.remove('dark')
     }
-
+    
     useEffect(() => {
         if (location.state) {
             const { name } = location.state
             setUserName(name)
         }
-    }, [location])
-    
+    }, [])
+
+    const serverOffset = 0
     useEffect(() => {
-        console.log('entre');
         const fetchData = async () => {
-            console.log('entre a fechData');
             try {
+                socket.off("Enviar Mensaje")
                 socket.on("Enviar Mensaje", (message, id, dateNow, name) => {
                     let ParseFecha = new Date(dateNow)
                     let hora = ParseFecha.getHours()
@@ -38,6 +38,8 @@ const Chat = () => {
                         { message, id, hora, min, name },
                     ])
                 })
+                socket.auth.serverOffset = serverOffset
+                socket.off("UserConnection")
                 socket.on("UserConnection", (conected) => {
                     setOnline(conected)
                 })
@@ -48,8 +50,13 @@ const Chat = () => {
             }
         }
         fetchData()
-    }, [])
-    console.log(rowsMessage);
+        return () => {
+            socket.off("Enviar Mensaje")
+            socket.off("UserConnection")
+        }
+    }, [userName])
+    
+
     useEffect(() => {
         if (chatContainerRef.current) {
             chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight
@@ -60,10 +67,9 @@ const Chat = () => {
     const handleSubmit = (e) => {
         e.preventDefault()
         const dateNow = new Date()
-        socket.emit("Guardar Mensaje", message, dateNow, userName || 'anonymus')
+        socket.emit("Guardar Mensaje", message, dateNow, userName)
         setMessage('')
-    };
-
+    }
     if (loading) {
         return <div>Loading...</div>
     }
@@ -78,7 +84,7 @@ const Chat = () => {
                 </div>
                 <ul
                     ref={chatContainerRef}
-                    className="h-full bg-slate-50 p-5 overflow-scroll scroll-smooth dark:bg-slate-900"
+                    className="h-full bg-slate-50 p-5 overflow-y-scroll scroll-smooth dark:bg-slate-900"
                 >
                     {rowsMessage.map((messageOutp) => (
                         <li key={messageOutp.id} className="bg-white p-2 mt-3 shadow-md dark:bg-slate-800">
