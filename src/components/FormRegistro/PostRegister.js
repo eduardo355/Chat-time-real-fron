@@ -1,14 +1,11 @@
-import io from 'socket.io-client'
 
-export const PostRegiser = (name, apellido, user) => {
-    return new Promise((resolve, reject) => {
-        const socket = io('https://chat-time-real-back-patient-paper-4336.fly.dev', {
-            withCredentials: true,
-            transports: ['websocket', 'polling'],
-            auth: {
-                serverOffset: 0,
-            },
-        })
+import socket from "../../socket/socket"
+
+export const PostRegiser = async (name, apellido, user) => {
+
+    
+        return new Promise((resolve, reject) => {
+
         socket.emit('Registro', name, apellido, user)
 
         socket.on('Registro correcto', (id, name, apellido, user) => {
@@ -17,8 +14,8 @@ export const PostRegiser = (name, apellido, user) => {
                 name: name,
                 apellido: apellido,
                 user: user
-            };
-            console.log('Desde Post ' + DATA.id_user)
+            }
+        
             resolve(DATA)
         })
         

@@ -22,6 +22,7 @@ const FormRegistro = () => {
                 setApellido('')
                 setUser('')
                 if(usuario.id_user) {
+
                     navegacion('/Chat', { state: { name: usuario.name } })
                 }
             } catch (error) {
@@ -35,8 +36,8 @@ const FormRegistro = () => {
 
     return (
         <section 
-        className=' flex h-screen items-center justify-center w-screen bg-slate-50 dark:bg-black'>
-            <form className=' flex flex-col bg-white shadow-md rounded-sm p-4 w-1/4' onSubmit={(e) => { e.preventDefault(); handleSubmit(); }}>
+        className=' flex h-screen items-center justify-center w-screen bg-slate-50 dark:bg-black '>
+            <form className=' flex flex-col bg-white shadow-md rounded-sm p-4 max-sm:w-4/5 max-md:w-1/2 max-lg:w-1/2 max-2xl:w-1/3' onSubmit={(e) => { e.preventDefault(); handleSubmit(); }}>
                 <h1 className=' text-center text-2xl font-bold text-blue-400'>CHAT EN TIEMPO REAL</h1>
                 <label className=' text-xl text-center mt-3 font-bold' htmlFor="name">Nombre</label>
                 <input 
@@ -62,6 +63,12 @@ const FormRegistro = () => {
                 onChange={(e) => setUser(e.target.value)} />
                 
                 <button className=' text-xl mt-3 bg-blue-400 text-white p-1 hover:bg-blue-500 font-bold' type="submit">REGISTRAR</button>
+                <button 
+                className=' text-xl mt-3 bg-blue-400 text-white p-1 hover:bg-blue-500 font-bold' 
+                onClick={() => navegacion('/Sesion')}
+                type='button'>
+                    INICIAR SESION
+                </button>
             </form>
         </section>
     )

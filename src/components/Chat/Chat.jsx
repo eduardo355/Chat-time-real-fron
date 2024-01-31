@@ -1,18 +1,17 @@
-import { useState, useEffect, useRef } from "react";
-import { io } from "socket.io-client";
-import { useLocation } from "react-router-dom";
+import { useState, useEffect, useRef } from "react"
+import { useLocation } from "react-router-dom"
+import socket from "../../socket/socket"
 
 const Chat = () => {
-    const [message, setMessage] = useState("");
-    const [rowsMessage, setRowsMessage] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [userName, setUserName] = useState("");
-    const [online, setOnline] = useState(0);
-    const chatContainerRef = useRef(null);
+    const [message, setMessage] = useState('')
+    const [rowsMessage, setRowsMessage] = useState([])
+    const [loading, setLoading] = useState(true)
+    const [userName, setUserName] = useState('')
+    const [online, setOnline] = useState(0)
+    const chatContainerRef = useRef(null)
     const location = useLocation()
-    const socketRef = useRef(null)
 
-        if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
         document.documentElement.classList.add('dark')
     } else {
         document.documentElement.classList.remove('dark')
@@ -20,27 +19,17 @@ const Chat = () => {
 
     useEffect(() => {
         if (location.state) {
-            const { name } = location.state;
-            setUserName(name);
+            const { name } = location.state
+            setUserName(name)
         }
-    }, [location]);
-
+    }, [location])
+    
     useEffect(() => {
-        const socket = io("https://chat-time-real-back-patient-paper-4336.fly.dev", {
-            withCredentials: true,
-            transports: ["websocket", "polling"],
-            auth: {
-                name: userName || "anonymus",
-                serverOffset: 0,
-            },
-        })
-        socketRef.current = socket
-    }, [userName])
-
-    useEffect(() => {
+        console.log('entre');
         const fetchData = async () => {
+            console.log('entre a fechData');
             try {
-                socketRef.current.on("Enviar Mensaje", (message, id, dateNow, name) => {
+                socket.on("Enviar Mensaje", (message, id, dateNow, name) => {
                     let ParseFecha = new Date(dateNow)
                     let hora = ParseFecha.getHours()
                     let min = ParseFecha.getMinutes()
@@ -49,7 +38,7 @@ const Chat = () => {
                         { message, id, hora, min, name },
                     ])
                 })
-                socketRef.current.on("UserConnection", (conected) => {
+                socket.on("UserConnection", (conected) => {
                     setOnline(conected)
                 })
                 setLoading(false)
@@ -59,32 +48,29 @@ const Chat = () => {
             }
         }
         fetchData()
-        return () => {
-            socketRef.current.off("Enviar Mensaje")
-        }
-    }, []);
-
+    }, [])
+    console.log(rowsMessage);
     useEffect(() => {
         if (chatContainerRef.current) {
-            chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+            chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight
         }
-    }, [rowsMessage]);
+    }, [rowsMessage])
 
 
     const handleSubmit = (e) => {
         e.preventDefault()
         const dateNow = new Date()
-        socketRef.current.emit("Guardar Mensaje", message, dateNow)
-        setMessage("")
+        socket.emit("Guardar Mensaje", message, dateNow, userName || 'anonymus')
+        setMessage('')
     };
 
     if (loading) {
-        return <div>Loading...</div>;
+        return <div>Loading...</div>
     }
 
     return (
-        <section className="h-screen p-8 dark:bg-slate-800">
-            <div className="flex flex-col w-full h-full shadow-md rounded-md dark:shadow-sm dark:shadow-slate-50">
+        <section className="h-screen p-8 dark:bg-slate-800 max-sm:p-0">
+            <div className="flex flex-col w-full h-full shadow-md rounded-md max-sm:w-full">
                 <div className="flex bg-blue-400 rounded-t text-white justify-between p-2 text-xl font-bold">
                     <span>Chat</span>
                     <span>{userName || "anoymus"}</span>
@@ -120,10 +106,11 @@ const Chat = () => {
                     <button className="bg-green-500 p-2 text-xl text-white hover:bg-green-600 dark:bg-red-700 hover:dark:bg-red-800">
                         Enviar
                     </button>
+                    
                 </form>
             </div>
         </section>
-    );
-};
+    )
+}
 
-export default Chat;
+export default Chat
