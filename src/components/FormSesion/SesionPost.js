@@ -1,14 +1,10 @@
-
 import socket from "../../socket/socket"
 
-export const PostRegiser = async (name, apellido, user) => {
+export const SesionPost = async (user) => {
+    return  new Promise((resolve, reject) => {
+        socket.emit('Sesion', user)
 
-    
-        return new Promise((resolve, reject) => {
-
-        socket.emit('Registro', name, apellido, user)
-
-        socket.on('Registro correcto', (id, name, apellido, user) => {
+        socket.on('Sesion Correcto', (id, name, apellido, user) => {
             const DATA = {
                 id_user: id,
                 name: name,
@@ -18,7 +14,16 @@ export const PostRegiser = async (name, apellido, user) => {
         
             resolve(DATA)
         })
+
+        socket.on('Sesion Fail', (fail, result) => {
+            const DATA = {
+                fail: fail,
+                result: result,
+            }
         
+            resolve(DATA)
+        })
+
         socket.on('Registro error', (error) => {
             reject(error);
         })

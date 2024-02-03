@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react"
-import { useLocation } from "react-router-dom"
+import { useLocation, useNavigate } from "react-router-dom"
 import socket from "../../socket/socket"
 
 const Chat = () => {
@@ -10,6 +10,7 @@ const Chat = () => {
     const [online, setOnline] = useState(0)
     const chatContainerRef = useRef(null)
     const location = useLocation()
+    const navegacion = useNavigate()
 
     if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
         document.documentElement.classList.add('dark')
@@ -78,6 +79,7 @@ const Chat = () => {
         <section className="h-screen p-8 dark:bg-slate-800 max-sm:p-0">
             <div className="flex flex-col w-full h-full shadow-md rounded-md max-sm:w-full">
                 <div className="flex bg-blue-400 rounded-t text-white justify-between p-2 text-xl font-bold">
+                    {userName !== 'anonymus' && <button onClick={() => navegacion('/')}>Cerrar Sesion</button>}
                     <span>Chat</span>
                     <span>{userName || "anoymus"}</span>
                     <span className="text-green-500 dark:text-red-700">Online {online}</span>

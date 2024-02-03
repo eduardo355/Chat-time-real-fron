@@ -37,7 +37,7 @@ const FormRegistro = () => {
     return (
         <section 
         className=' flex h-screen items-center justify-center w-screen bg-slate-50 dark:bg-black '>
-            <form className=' flex flex-col bg-white shadow-md rounded-sm p-4 max-sm:w-4/5 max-md:w-1/2 max-lg:w-1/2 max-2xl:w-1/3' onSubmit={(e) => { e.preventDefault(); handleSubmit(); }}>
+            <form className=' flex flex-col bg-white shadow-md rounded-sm p-4 w-96 max-sm:w-4/5 max-md:w-1/2 max-lg:w-1/2 max-2xl:w-1/3' onSubmit={(e) => { e.preventDefault(); handleSubmit(); }}>
                 <h1 className=' text-center text-2xl font-bold text-blue-400'>CHAT EN TIEMPO REAL</h1>
                 <label className=' text-xl text-center mt-3 font-bold' htmlFor="name">Nombre</label>
                 <input 
