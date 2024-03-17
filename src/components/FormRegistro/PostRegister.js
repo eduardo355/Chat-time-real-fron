@@ -19,12 +19,17 @@ export const PostRegiser = async (name, apellido, user) => {
             resolve(DATA)
         })
         
-        socket.on('Registro error', (error) => {
-            reject(error);
+        socket.on('Duplicado', (error) => {
+            const DATA = {
+                error: error,
+                message: 'Error, usuario ya existe.'
+            }
+            resolve(DATA)
+            reject(error)
         })
         
         return () => {
-            socket.off('Enviar Mensaje')
+            socket.off('Registro')
         }
     })
 }
